@@ -4,6 +4,7 @@
 # This data will be passed to the Unity test environment to help us map
 # a fist clench to jetpack activation.
 
+import logging
 from brainflow.board_shim import BoardShim, BrainFlowInputParams
 import numpy as np
 import time
