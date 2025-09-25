@@ -5,11 +5,11 @@
 # a fist clench to jetpack activation.
 
 import logging
-from brainflow.board_shim import BoardShim, BrainFlowInputParams
+from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 import numpy as np
 import time
 
-N = 100 # number of samples to consider for rolling average
+N = 50 # number of samples to consider for rolling average
 THRESHOLD = 200  # threshold for determining clenched vs relaxed
 
 # configure board
@@ -23,24 +23,23 @@ params.master_board = BoardIds.GANGLION_NATIVE_BOARD
     
 board_shim = BoardShim(params.master_board, params)
 
-board.prepare_session()
-board.start_stream()
+board_shim.prepare_session()
+board_shim.start_stream()
 
 # get EEG channels (or whichever channels you need)
-emg_channels = BoardShim.get_emg_channels(board_id)
+emg_channels = BoardShim.get_emg_channels(board_shim.get_board_id())
 
 while True:
     # fetch up to the last N data points (for each channel)
-    data = board.get_current_board_data(N)  
+    data = board_shim.get_current_board_data(N)  
 
-    for ch in emg_channels:
-        channel_data = data[ch]  # most recent <=N samples
-        if len(channel_data) > 0:
-            rolling_avg = np.mean(channel_data)
-            print(f"Channel {ch}: Rolling Avg = {rolling_avg:.3f}")
-            if rolling_avg > THRESHOLD:
-                print("\t\tClenched")
-            else:
-                print("\t\tRelaxed")
+    channel_data = data[1]  # most recent <=N samples
+    if len(channel_data) > 0:
+        rolling_avg = np.mean(channel_data)
+        print(f"Rolling Avg = {rolling_avg:.3f}")
+        if abs(rolling_avg) > THRESHOLD:
+            print("\t\tClenched")
+        else:
+            print("\t\tRelaxed")
 
     time.sleep(0.1)  # poll every 100 ms
