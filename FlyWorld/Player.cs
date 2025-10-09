@@ -1,4 +1,4 @@
-using Unity.Cinemachine.Samples;
+using Unity.Cinemachine;
 using UnityEngine;
 public class Player : LivingObject
 {
