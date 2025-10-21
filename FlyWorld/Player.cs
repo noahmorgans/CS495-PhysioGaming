@@ -60,9 +60,12 @@ public class Player : LivingObject
         if (Input.GetKey(KeyCode.LeftShift) || gameInput.GetBurstHold())
         {
             // Shift is being held down
-            Fly();
-            jetpack.BurnFuel();
-            jetPackParticles.SetActive(true);
+            if (jetpack.GetFuelAmount() > 0)
+            {
+                Fly();
+                jetpack.BurnFuel();
+                jetPackParticles.SetActive(true);
+            }
         }
         else
         {

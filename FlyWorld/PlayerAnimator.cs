@@ -58,7 +58,7 @@ public class PlayerAnimator : MonoBehaviour
         if (player.IsFlying())
         {
             StopAllAnimations();
-            animator.SetBool(IS_FLYING, true);
+            animator.SetBool(IS_RUNNING, player.IsMoving());
             return;
         }
     }
