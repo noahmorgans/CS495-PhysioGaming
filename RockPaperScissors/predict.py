@@ -21,8 +21,35 @@ window_size = norm_params['window_size']
 GESTURE_NAMES = {0: "Rock", 1: "Paper", 2: "Scissors"}
 
 def apply_notch_filter(data, fs, notch_freq=60.0, quality_factor=30.0):
-    """Apply a notch filter to remove powerline noise."""
+    """
+    Apply a notch filter to remove powerline noise (e.g., 60 Hz).
+    Args:
+        data: 1D array of signal data
+        fs: Sampling frequency (Hz)
+        notch_freq: Frequency to remove (Hz)
+        quality_factor: Quality factor for the notch filter
+    Returns:
+        Filtered signal
+    """
     b, a = iirnotch(notch_freq, quality_factor, fs)
+    return filtfilt(b, a, data)
+
+def apply_bandpass_filter(data, fs, lowcut=20.0, highcut=450.0, order=4):
+    """
+    Apply a bandpass filter to EMG data.
+    Args:
+        data: 1D array of signal data
+        fs: Sampling frequency (Hz)
+        lowcut: Low cutoff frequency (Hz)
+        highcut: High cutoff frequency (Hz)
+        order: Filter order
+    Returns:
+        Filtered signal
+    """
+    nyq = 0.5 * fs
+    low = lowcut / nyq
+    high = highcut / nyq
+    b, a = butter(order, [low, high], btype='band')
     return filtfilt(b, a, data)
 
 def predict_gesture(window):
@@ -84,12 +111,14 @@ def main():
     try:
         while True:
             # Get recent data
-            data = board.get_current_board_data(10)
+            data = board.get_current_board_data(80)
             
             if data.shape[1] > 0:
                 # Extract and filter EMG data
                 for i in range(data.shape[1]):
                     sample = data[emg_channels, i]
+                    sample = apply_bandpass_filter(sample, sampling_rate)
+                    sample = apply_notch_filter(sample, sampling_rate)
                     data_buffer.append(sample)
                 
                 # Once we have enough data, make prediction
