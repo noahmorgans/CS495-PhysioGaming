@@ -1,7 +1,7 @@
 import numpy as np
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from brainflow.data_filter import DataFilter, FilterTypes
-from scipy.signal import iirnotch, filtfilt, butter
+from scipy.signal import iirnotch, filtfilt, butter, lfilter
 import logging
 import joblib
 import time
@@ -31,8 +31,12 @@ def apply_notch_filter(data, fs, notch_freq=60.0, quality_factor=30.0):
     Returns:
         Filtered signal
     """
+    x = np.asarray(data, dtype=float).ravel()
     b, a = iirnotch(notch_freq, quality_factor, fs)
-    return filtfilt(b, a, data)
+    padlen_needed = 3 * (max(len(a), len(b)) - 1)
+    if x.size <= padlen_needed:
+        return lfilter(b, a, x)
+    return filtfilt(b, a, x)
 
 def apply_bandpass_filter(data, fs, lowcut=20.0, highcut=99.0, order=4):
     """
@@ -46,13 +50,15 @@ def apply_bandpass_filter(data, fs, lowcut=20.0, highcut=99.0, order=4):
     Returns:
         Filtered signal
     """
+    x = np.asarray(data, dtype=float).ravel()
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq
-    print("Low: ", low)
-    print("High: ", high)
     b, a = butter(order, [low, high], btype='band')
-    return filtfilt(b, a, data)
+    padlen_needed = 3 * (max(len(a), len(b)) - 1)
+    if x.size <= padlen_needed:
+        return lfilter(b, a, x)
+    return filtfilt(b, a, x)
 
 def predict_gesture(window):
     """
@@ -108,9 +114,10 @@ def main():
     print("Press Ctrl+C to stop.\n")
 
 
-    BUFFER_SECONDS = 1.0
+    BUFFER_SECONDS = 0.4
     # Buffer to store incoming data
     data_buffer = deque(maxlen=int(BUFFER_SECONDS * sampling_rate))
+    filtered_buffer = deque(maxlen=int(BUFFER_SECONDS * sampling_rate))
     
     try:
         while True:
@@ -129,11 +136,9 @@ def main():
                     for i in range(data.shape[1]):
                         sample = apply_bandpass_filter(sample, sampling_rate)
                         sample = apply_notch_filter(sample, sampling_rate)
-                        data_buffer.append(sample)
+                        filtered_buffer.append(sample)
 
-                    print("!!!!!!!")
-
-                    window = np.array(data_buffer)  # Shape: (window_size, n_channels)
+                    window = np.array(filtered_buffer)  # Shape: (window_size, n_channels)
                     
                     gesture_name, confidence, all_probs = predict_gesture(window)
                     
