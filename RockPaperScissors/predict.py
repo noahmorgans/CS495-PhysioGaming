@@ -1,7 +1,7 @@
 import numpy as np
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds
 from brainflow.data_filter import DataFilter, FilterTypes
-from scipy.signal import iirnotch, filtfilt
+from scipy.signal import iirnotch, filtfilt, butter
 import logging
 import joblib
 import time
@@ -34,7 +34,7 @@ def apply_notch_filter(data, fs, notch_freq=60.0, quality_factor=30.0):
     b, a = iirnotch(notch_freq, quality_factor, fs)
     return filtfilt(b, a, data)
 
-def apply_bandpass_filter(data, fs, lowcut=20.0, highcut=450.0, order=4):
+def apply_bandpass_filter(data, fs, lowcut=20.0, highcut=99.0, order=4):
     """
     Apply a bandpass filter to EMG data.
     Args:
@@ -49,6 +49,8 @@ def apply_bandpass_filter(data, fs, lowcut=20.0, highcut=450.0, order=4):
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq
+    print("Low: ", low)
+    print("High: ", high)
     b, a = butter(order, [low, high], btype='band')
     return filtfilt(b, a, data)
 
@@ -105,8 +107,10 @@ def main():
     print("\nStarting real-time prediction...")
     print("Press Ctrl+C to stop.\n")
 
+
+    BUFFER_SECONDS = 1.0
     # Buffer to store incoming data
-    data_buffer = deque(maxlen=window_size)
+    data_buffer = deque(maxlen=int(BUFFER_SECONDS * sampling_rate))
     
     try:
         while True:
@@ -117,12 +121,18 @@ def main():
                 # Extract and filter EMG data
                 for i in range(data.shape[1]):
                     sample = data[emg_channels, i]
-                    sample = apply_bandpass_filter(sample, sampling_rate)
-                    sample = apply_notch_filter(sample, sampling_rate)
                     data_buffer.append(sample)
                 
                 # Once we have enough data, make prediction
                 if len(data_buffer) == window_size:
+
+                    for i in range(data.shape[1]):
+                        sample = apply_bandpass_filter(sample, sampling_rate)
+                        sample = apply_notch_filter(sample, sampling_rate)
+                        data_buffer.append(sample)
+
+                    print("!!!!!!!")
+
                     window = np.array(data_buffer)  # Shape: (window_size, n_channels)
                     
                     gesture_name, confidence, all_probs = predict_gesture(window)
