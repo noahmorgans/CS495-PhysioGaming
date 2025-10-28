@@ -9,9 +9,9 @@ from collections import deque
 import tensorflow as tf
 
 # Load trained model and preprocessing parameters
-model = tf.keras.models.load_model("emg_cnn_model.keras")
-label_encoder = joblib.load("emg_label_encoder.pkl")
-norm_params = joblib.load("emg_normalization.pkl")
+model = tf.keras.models.load_model("emg_cnn_model2.keras")
+label_encoder = joblib.load("emg_label_encoder2.pkl")
+norm_params = joblib.load("emg_normalization2.pkl")
 
 X_mean = norm_params['mean'].squeeze()  # Remove extra dimensions
 X_std = norm_params['std'].squeeze()  # Remove extra dimensions
@@ -38,7 +38,7 @@ def apply_notch_filter(data, fs, notch_freq=60.0, quality_factor=30.0):
         return lfilter(b, a, x)
     return filtfilt(b, a, x)
 
-def apply_bandpass_filter(data, fs, lowcut=20.0, highcut=99.0, order=4):
+def apply_bandpass_filter(data, fs, lowcut=20.0, highcut=450.0, order=4):
     """
     Apply a bandpass filter to EMG data.
     Args:

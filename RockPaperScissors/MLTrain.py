@@ -8,7 +8,7 @@ from tensorflow.keras import layers
 import joblib
 
 # Load data
-df = pd.read_csv("emg_signals.csv")
+df = pd.read_csv("emg_signals2.csv")
 window_size = 80  # ~400 ms at 200 Hz sampling rate
 overlap = int(window_size * 0.25)  # 25% overlap
 
@@ -149,14 +149,14 @@ print(f"\nTest accuracy: {test_accuracy:.4f}")
 print(f"Test loss: {test_loss:.4f}")
 
 # Save model and preprocessing parameters
-model.save("emg_cnn_model.keras")
-joblib.dump(label_encoder, "emg_label_encoder.pkl")
+model.save("emg_cnn_model2.keras")
+joblib.dump(label_encoder, "emg_label_encoder2.pkl")
 joblib.dump({
     'mean': X_mean, 
     'std': X_std,
     'window_size': window_size,
     'overlap': overlap
-}, "emg_normalization.pkl")
+}, "emg_normalization2.pkl")
 
 print("\n✅ Model training complete!")
 print(f"Saved files:")
