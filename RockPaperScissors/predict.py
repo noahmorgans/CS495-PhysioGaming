@@ -125,28 +125,33 @@ def main():
             data = board.get_current_board_data(80)
             
             if data.shape[1] > 0:
-                # Extract and filter EMG data
+                # Extract EMG data and add to buffer
                 for i in range(data.shape[1]):
                     sample = data[emg_channels, i]
                     data_buffer.append(sample)
                 
                 # Once we have enough data, make prediction
-                if len(data_buffer) == window_size:
-
-                    for i in range(data.shape[1]):
-                        sample = apply_bandpass_filter(sample, sampling_rate)
-                        sample = apply_notch_filter(sample, sampling_rate)
-                        filtered_buffer.append(sample)
-
-                    window = np.array(filtered_buffer)  # Shape: (window_size, n_channels)
+                if len(data_buffer) >= window_size:
+                    # Convert buffer to array
+                    window = np.array(list(data_buffer)[-window_size:])  # Shape: (window_size, n_channels)
                     
-                    gesture_name, confidence, all_probs = predict_gesture(window)
+                    # Apply filters to each channel
+                    filtered_window = np.zeros_like(window)
+                    for ch_idx in range(window.shape[1]):
+                        filtered_window[:, ch_idx] = apply_bandpass_filter(
+                            window[:, ch_idx], sampling_rate
+                        )
+                        filtered_window[:, ch_idx] = apply_notch_filter(
+                            filtered_window[:, ch_idx], sampling_rate
+                        )
                     
-                    # Display prediction with better formatting
+                    gesture_name, confidence, all_probs = predict_gesture(filtered_window)
+                    
+                    # Display prediction
                     print(f"\rPredicted: {gesture_name:10s} | Confidence: {confidence:.2%} | " + 
-                          f"[Rock: {all_probs[0]:.2f}, Paper: {all_probs[1]:.2f}, " +
-                          f"Scissors: {all_probs[2]:.2f}]", 
-                          end='', flush=True)
+                        f"[Rock: {all_probs[0]:.2f}, Paper: {all_probs[1]:.2f}, " +
+                        f"Scissors: {all_probs[2]:.2f}]", 
+                        end='', flush=True)
             
             # Control loop speed
             time.sleep(0.05)

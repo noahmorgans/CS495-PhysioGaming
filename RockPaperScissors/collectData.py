@@ -8,8 +8,8 @@ from scipy.signal import iirnotch, filtfilt, butter
 
 # How long to record per gesture (in seconds)
 RECORD_DURATION = 5
-NUM_TRIALS = 5  # Number of trials per gesture
-SAVE_FILE = "emg_signals.csv"
+NUM_TRIALS = 10  # Number of trials per gesture
+SAVE_FILE = "emg_signals2.csv"
 
 # Gestures and their numeric labels
 GESTURES = {
