@@ -237,7 +237,7 @@ def main():
     finally:
         board.stop_stream()
         board.release_session()
-        print("✅ Stream stopped and session released.")
+        print(" Stream stopped and session released.")
 
 if __name__ == "__main__":
     main()
