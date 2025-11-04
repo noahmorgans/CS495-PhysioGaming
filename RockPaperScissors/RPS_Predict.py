@@ -16,9 +16,9 @@ ENCODER_DIR = os.path.join(BASE_DIR, "Encoder Files")
 NORM_DIR = os.path.join(BASE_DIR, "Normalization Files")
 
 # Load files from appropriate directories
-model = tf.keras.models.load_model(os.path.join(MODEL_DIR, "emg_cnn_model_TEST.keras"))
-label_encoder = joblib.load(os.path.join(ENCODER_DIR, "emg_label_encoder_TEST.pkl"))
-norm_params = joblib.load(os.path.join(NORM_DIR, "emg_normalization_TEST.pkl"))
+model = tf.keras.models.load_model(os.path.join(MODEL_DIR, "emg_cnn_model4.keras"))
+label_encoder = joblib.load(os.path.join(ENCODER_DIR, "emg_label_encoder4.pkl"))
+norm_params = joblib.load(os.path.join(NORM_DIR, "emg_normalization4.pkl"))
 
 ACTIVE_CHANNELS = [0]  # EMG channels to use
 
