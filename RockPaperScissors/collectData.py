@@ -5,11 +5,20 @@ import numpy as np
 import time
 import pandas as pd
 from scipy.signal import iirnotch, filtfilt, butter
+import os
+
+# Define directory structure
+BASE_DIR = "EMG Files"
+SIGNAL_DIR = os.path.join(BASE_DIR, "Signal Files")
+# Create directories if they don't exist
+os.makedirs(SIGNAL_DIR, exist_ok=True)
+# Update save path
+SAVE_FILE = os.path.join(SIGNAL_DIR, "emg_signals_TEST.csv")
+
 
 # How long to record per gesture (in seconds)
 RECORD_DURATION = 5
-NUM_TRIALS = 10  # Number of trials per gesture
-SAVE_FILE = "emg_signals5.csv"
+NUM_TRIALS = 1  # Number of trials per gesture
 ACTIVE_CHANNELS = [0]  # EMG channels to record
 
 # Gestures and their numeric labels

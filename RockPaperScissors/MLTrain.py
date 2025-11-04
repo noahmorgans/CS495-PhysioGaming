@@ -6,9 +6,22 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 import joblib
+import os
 
-# Load data
-df = pd.read_csv("emg_signals5.csv")
+# Define directory structure (same as above)
+BASE_DIR = "EMG Files"
+SIGNAL_DIR = os.path.join(BASE_DIR, "Signal Files")
+MODEL_DIR = os.path.join(BASE_DIR, "Model Files")
+ENCODER_DIR = os.path.join(BASE_DIR, "Encoder Files")
+NORM_DIR = os.path.join(BASE_DIR, "Normalization Files")
+
+# Create output directories
+os.makedirs(MODEL_DIR, exist_ok=True)
+os.makedirs(ENCODER_DIR, exist_ok=True)
+os.makedirs(NORM_DIR, exist_ok=True)
+
+# Load data from signal directory
+df = pd.read_csv(os.path.join(SIGNAL_DIR, "emg_signals_TEST.csv"))
 window_size = 80  # ~400 ms at 200 Hz sampling rate
 overlap = int(window_size * 0.25)  # 25% overlap
 
@@ -149,14 +162,14 @@ print(f"\nTest accuracy: {test_accuracy:.4f}")
 print(f"Test loss: {test_loss:.4f}")
 
 # Save model and preprocessing parameters
-model.save("emg_cnn_model5.keras")
-joblib.dump(label_encoder, "emg_label_encoder5.pkl")
+model.save(os.path.join(MODEL_DIR, "emg_cnn_model_TEST.keras"))
+joblib.dump(label_encoder, os.path.join(ENCODER_DIR, "emg_label_encoder_TEST.pkl"))
 joblib.dump({
     'mean': X_mean, 
     'std': X_std,
     'window_size': window_size,
     'overlap': overlap
-}, "emg_normalization5.pkl")
+}, os.path.join(NORM_DIR, "emg_normalization_TEST.pkl"))
 
 print("\n✅ Model training complete!")
 print(f"Saved files:")

@@ -7,11 +7,19 @@ import joblib
 import time
 from collections import deque
 import tensorflow as tf
+import os
 
-# Load trained model and preprocessing parameters
-model = tf.keras.models.load_model("emg_cnn_model5.keras")
-label_encoder = joblib.load("emg_label_encoder5.pkl")
-norm_params = joblib.load("emg_normalization5.pkl")
+# Define directory structure (same as above)
+BASE_DIR = "EMG Files"
+MODEL_DIR = os.path.join(BASE_DIR, "Model Files")
+ENCODER_DIR = os.path.join(BASE_DIR, "Encoder Files")
+NORM_DIR = os.path.join(BASE_DIR, "Normalization Files")
+
+# Load files from appropriate directories
+model = tf.keras.models.load_model(os.path.join(MODEL_DIR, "emg_cnn_model_TEST.keras"))
+label_encoder = joblib.load(os.path.join(ENCODER_DIR, "emg_label_encoder_TEST.pkl"))
+norm_params = joblib.load(os.path.join(NORM_DIR, "emg_normalization_TEST.pkl"))
+
 ACTIVE_CHANNELS = [0]  # EMG channels to use
 
 X_mean = norm_params['mean'].squeeze()  # Remove extra dimensions
