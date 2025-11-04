@@ -9,7 +9,8 @@ from scipy.signal import iirnotch, filtfilt, butter
 # How long to record per gesture (in seconds)
 RECORD_DURATION = 5
 NUM_TRIALS = 10  # Number of trials per gesture
-SAVE_FILE = "emg_signals2.csv"
+SAVE_FILE = "emg_signals5.csv"
+ACTIVE_CHANNELS = [0]  # EMG channels to record
 
 # Gestures and their numeric labels
 GESTURES = {
@@ -32,23 +33,19 @@ def apply_notch_filter(data, fs, notch_freq=60.0, quality_factor=30.0):
     b, a = iirnotch(notch_freq, quality_factor, fs)
     return filtfilt(b, a, data)
 
-def apply_bandpass_filter(data, fs, lowcut=20.0, highcut=450.0, order=4):
+def apply_highpass_filter(data, fs, cutoff=20.0, order=4):
     """
-    Apply a bandpass filter to EMG data.
-    Args:
-        data: 1D array of signal data
-        fs: Sampling frequency (Hz)
-        lowcut: Low cutoff frequency (Hz)
-        highcut: High cutoff frequency (Hz)
-        order: Filter order
-    Returns:
-        Filtered signal
+    Apply a highpass filter to remove low-frequency noise and motion artifacts.
+    This is more appropriate for low sampling rates.
     """
+    x = np.asarray(data, dtype=float).ravel()
     nyq = 0.5 * fs
-    low = lowcut / nyq
-    high = highcut / nyq
-    b, a = butter(order, [low, high], btype='band')
-    return filtfilt(b, a, data)
+    high = cutoff / nyq
+    b, a = butter(order, high, btype='high')
+    padlen_needed = 3 * (max(len(a), len(b)) - 1)
+    if x.size <= padlen_needed:
+        return lfilter(b, a, x)
+    return filtfilt(b, a, x)
 
 def collect_data_for_gesture(board, gesture_name, trial_num, duration=5):
     """
@@ -68,25 +65,26 @@ def collect_data_for_gesture(board, gesture_name, trial_num, duration=5):
     board.stop_stream()
     
     data = board.get_board_data()
+    # Extract only active EMG channels
     emg_channels = BoardShim.get_emg_channels(board.get_board_id())
-    sampling_rate = board.get_sampling_rate(board.get_board_id())
+    active_channel_indices = [emg_channels[i] for i in ACTIVE_CHANNELS]
     
-    print(f"  Collected {data.shape[1]} samples, applying filters...")
+    print(f"  Using channels: {ACTIVE_CHANNELS} (indices: {active_channel_indices})")
     
-    # Apply bandpass filter (20–450 Hz) and notch filter (60 Hz)
-    for ch in emg_channels:
+    # Apply filters only to active channels
+    for ch in active_channel_indices:
         try:
-            data[ch] = apply_bandpass_filter(data[ch], sampling_rate)
+            data[ch] = apply_bandpass_filter(data[ch], sampling_rate, lowcut=20.0)
             data[ch] = apply_notch_filter(data[ch], sampling_rate)
         except Exception as e:
             print(f"  Warning: Filter failed for channel {ch}: {e}")
     
-    # Extract EMG data
-    emg_data = data[emg_channels].T  # Transpose to (samples, channels)
+    # Extract only active channels
+    emg_data = data[active_channel_indices].T  # Transpose to (samples, channels)
     
-    # Create DataFrame
-    n_channels = len(emg_channels)
-    columns = [f"ch{i+1}" for i in range(n_channels)]
+    # Create DataFrame with only active channels
+    n_channels = len(ACTIVE_CHANNELS)
+    columns = [f"ch{i+1}" for i in ACTIVE_CHANNELS]
     df = pd.DataFrame(emg_data, columns=columns)
     df['label'] = GESTURES[gesture_name]
     df['trial'] = trial_num
