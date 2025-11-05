@@ -13,7 +13,7 @@ SIGNAL_DIR = os.path.join(BASE_DIR, "Signal Files")
 # Create directories if they don't exist
 os.makedirs(SIGNAL_DIR, exist_ok=True)
 # Update save path
-SAVE_FILE = os.path.join(SIGNAL_DIR, "emg_signals_1.csv")
+SAVE_FILE = os.path.join(SIGNAL_DIR, "emg_signals_2.csv")
 
 
 # How long to record per gesture (in seconds)
