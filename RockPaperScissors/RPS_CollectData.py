@@ -13,12 +13,12 @@ SIGNAL_DIR = os.path.join(BASE_DIR, "Signal Files")
 # Create directories if they don't exist
 os.makedirs(SIGNAL_DIR, exist_ok=True)
 # Update save path
-SAVE_FILE = os.path.join(SIGNAL_DIR, "emg_signals_TEST.csv")
+SAVE_FILE = os.path.join(SIGNAL_DIR, "emg_signals_6(200_window).csv")
 
 
 # How long to record per gesture (in seconds)
 RECORD_DURATION = 5
-NUM_TRIALS = 1  # Number of trials per gesture
+NUM_TRIALS = 10  # Number of trials per gesture
 ACTIVE_CHANNELS = [0]  # EMG channels to record
 
 # Gestures and their numeric labels

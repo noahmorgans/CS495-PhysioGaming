@@ -21,8 +21,8 @@ os.makedirs(ENCODER_DIR, exist_ok=True)
 os.makedirs(NORM_DIR, exist_ok=True)
 
 # Load data from signal directory
-df = pd.read_csv(os.path.join(SIGNAL_DIR, "emg_signals_TEST.csv"))
-window_size = 80  # ~400 ms at 200 Hz sampling rate
+df = pd.read_csv(os.path.join(SIGNAL_DIR, "emg_signals_6(200_window).csv"))
+window_size = 200  # ~400 ms at 200 Hz sampling rate
 overlap = int(window_size * 0.25)  # 25% overlap
 
 # Extract raw windows (no feature extraction needed for CNN)
@@ -71,35 +71,22 @@ y_test_cat = keras.utils.to_categorical(y_test, n_classes)
 # Build CNN model with improved architecture
 def build_cnn_model(input_shape, n_classes):
     model = keras.Sequential([
-        # First convolutional block - capture high-level features
-        layers.Conv1D(32, kernel_size=7, activation='relu', padding='same', input_shape=input_shape),
-        layers.BatchNormalization(),
-        layers.Conv1D(64, kernel_size=5, activation='relu', padding='same'),
+        # Block 1
+        layers.Conv1D(16, kernel_size=5, activation='relu', padding='same', input_shape=input_shape),
         layers.BatchNormalization(),
         layers.MaxPooling1D(pool_size=2),
-        layers.Dropout(0.25),
-        
-        # Second convolutional block - deeper feature extraction
-        layers.Conv1D(128, kernel_size=5, activation='relu', padding='same'),
-        layers.BatchNormalization(),
-        layers.Conv1D(128, kernel_size=3, activation='relu', padding='same'),
-        layers.BatchNormalization(),
-        layers.MaxPooling1D(pool_size=2),
-        layers.Dropout(0.3),
-        
-        # Third convolutional block - fine-grained patterns
-        layers.Conv1D(256, kernel_size=3, activation='relu', padding='same'),
+        layers.Dropout(0.2),
+
+        # Block 2
+        layers.Conv1D(32, kernel_size=3, activation='relu', padding='same'),
         layers.BatchNormalization(),
         layers.GlobalAveragePooling1D(),
         layers.Dropout(0.4),
         
-        # Dense layers with more capacity
-        layers.Dense(256, activation='relu'),
-        layers.BatchNormalization(),
+        # Single dense layer
+        layers.Dense(16, activation='relu'),
         layers.Dropout(0.5),
-        layers.Dense(128, activation='relu'),
-        layers.Dropout(0.4),
-        layers.Dense(n_classes, activation='softmax')
+        layers.Dense(3, activation='softmax')
     ])
     
     model.compile(
@@ -162,14 +149,14 @@ print(f"\nTest accuracy: {test_accuracy:.4f}")
 print(f"Test loss: {test_loss:.4f}")
 
 # Save model and preprocessing parameters
-model.save(os.path.join(MODEL_DIR, "emg_cnn_model_TEST.keras"))
-joblib.dump(label_encoder, os.path.join(ENCODER_DIR, "emg_label_encoder_TEST.pkl"))
+model.save(os.path.join(MODEL_DIR, "emg_cnn_model_6(200_window).keras"))
+joblib.dump(label_encoder, os.path.join(ENCODER_DIR, "emg_label_encoder_6(200_window).pkl"))
 joblib.dump({
     'mean': X_mean, 
     'std': X_std,
     'window_size': window_size,
     'overlap': overlap
-}, os.path.join(NORM_DIR, "emg_normalization_TEST.pkl"))
+}, os.path.join(NORM_DIR, "emg_normalization_6(200_window).pkl"))
 
 print("\n✅ Model training complete!")
 print(f"Saved files:")

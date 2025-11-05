@@ -16,9 +16,9 @@ ENCODER_DIR = os.path.join(BASE_DIR, "Encoder Files")
 NORM_DIR = os.path.join(BASE_DIR, "Normalization Files")
 
 # Load files from appropriate directories
-model = tf.keras.models.load_model(os.path.join(MODEL_DIR, "emg_cnn_model4.keras"))
-label_encoder = joblib.load(os.path.join(ENCODER_DIR, "emg_label_encoder4.pkl"))
-norm_params = joblib.load(os.path.join(NORM_DIR, "emg_normalization4.pkl"))
+model = tf.keras.models.load_model(os.path.join(MODEL_DIR, "emg_cnn_model_6(200_window).keras"))
+label_encoder = joblib.load(os.path.join(ENCODER_DIR, "emg_label_encoder_6(200_window).pkl"))
+norm_params = joblib.load(os.path.join(NORM_DIR, "emg_normalization_6(200_window).pkl"))
 
 ACTIVE_CHANNELS = [0]  # EMG channels to use
 
@@ -149,7 +149,7 @@ def main():
     print("\nStarting real-time prediction with signal analysis...")
     print("Press Ctrl+C to stop.\n")
 
-    BUFFER_SECONDS = 0.4
+    BUFFER_SECONDS = 1
     # Buffer to store incoming data
     data_buffer = deque(maxlen=int(BUFFER_SECONDS * sampling_rate))
     
@@ -160,7 +160,7 @@ def main():
     try:
         while True:
             # Get recent data
-            data = board.get_current_board_data(80)
+            data = board.get_current_board_data(200)
             
             if data.shape[1] > 0:
                 # Extract EMG data and add to buffer
