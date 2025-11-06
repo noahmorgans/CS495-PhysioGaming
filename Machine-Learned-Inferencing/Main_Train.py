@@ -158,7 +158,7 @@ joblib.dump({
     'overlap': overlap
 }, os.path.join(NORM_DIR, "emg_normalization_3(all_group_members)_(50_window_size).pkl"))
 
-print("\n✅ Model training complete!")
+print("\n Model training complete!")
 print(f"Saved files:")
 print(f"  - emg_cnn_model.keras")
 print(f"  - emg_label_encoder.pkl")

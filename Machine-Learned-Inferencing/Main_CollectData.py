@@ -67,7 +67,7 @@ def collect_data_for_gesture(board, gesture_name, trial_num, duration=5):
         print(f"  {i}...")
         time.sleep(1)
     
-    print(f"🔴 Recording {gesture_name} for {duration} seconds...")
+    print(f" Recording {gesture_name} for {duration} seconds...")
     
     board.start_stream()
     time.sleep(duration)
@@ -99,7 +99,7 @@ def collect_data_for_gesture(board, gesture_name, trial_num, duration=5):
     df['trial'] = trial_num
     df['timestamp'] = time.time()
     
-    print(f"  ✓ Recorded {len(df)} samples for {gesture_name}")
+    print(f"   Recorded {len(df)} samples for {gesture_name}")
     return df
 
 def main():
@@ -166,7 +166,7 @@ def main():
     print(f"Trials: {dataset['trial'].nunique()}")
     
     dataset.to_csv(SAVE_FILE, index=False)
-    print(f"\n✅ Data collection complete! Saved to {SAVE_FILE}")
+    print(f"\n Data collection complete! Saved to {SAVE_FILE}")
     print(f"Dataset shape: {dataset.shape}")
 
 if __name__ == "__main__":
