@@ -13,12 +13,13 @@ SIGNAL_DIR = os.path.join(BASE_DIR, "Signal Files")
 # Create directories if they don't exist
 os.makedirs(SIGNAL_DIR, exist_ok=True)
 # Update save path
-SAVE_FILE = os.path.join(SIGNAL_DIR, "emg_signals_2.csv")
+SAVE_FILE = os.path.join(SIGNAL_DIR, "emg_signals_3(all_group_members).csv")
 
 
 # How long to record per gesture (in seconds)
 RECORD_DURATION = 5
-NUM_TRIALS = 10  # Number of trials per gesture
+NUM_TRIALS = 15  # Number of trials per gesture
+NUM_PEOPLE = 5  # Number of different people to record data from
 ACTIVE_CHANNELS = [0]  # EMG channels to record
 
 # Gestures and their numeric labels
@@ -127,26 +128,30 @@ def main():
     all_dataframes = []
     trial_counter = 0
 
-    # Loop through all gestures and collect multiple trials
-    for gesture in GESTURES.keys():
-        print(f"\n{'='*60}")
-        print(f"Gesture: {gesture.upper()}")
-        print(f"{'='*60}")
-        
-        for trial in range(NUM_TRIALS):
-            df = collect_data_for_gesture(board, gesture, trial_counter, RECORD_DURATION)
-            all_dataframes.append(df)
-            trial_counter += 1
+    for _ in range(NUM_PEOPLE):
+
+        input("\nPress Enter when ready to begin data collection for the next person...")
+
+        # Loop through all gestures and collect multiple trials
+        for gesture in GESTURES.keys():
+            print(f"\n{'='*60}")
+            print(f"Gesture: {gesture.upper()}")
+            print(f"{'='*60}")
             
-            # Rest between trials
-            if trial < NUM_TRIALS - 1:
-                print(f"  Rest for 3 seconds before next trial...")
-                time.sleep(3)
-        
-        # Longer rest between gestures
-        if gesture != list(GESTURES.keys())[-1]:
-            print(f"\n  ⏸️  Rest for 5 seconds before next gesture...")
-            time.sleep(5)
+            for trial in range(NUM_TRIALS):
+                df = collect_data_for_gesture(board, gesture, trial_counter, RECORD_DURATION)
+                all_dataframes.append(df)
+                trial_counter += 1
+                
+                # Rest between trials
+                if trial < NUM_TRIALS - 1:
+                    print(f"  Rest for 3 seconds before next trial...")
+                    time.sleep(3)
+            
+            # Longer rest between gestures
+            if gesture != list(GESTURES.keys())[-1]:
+                print(f"\n  ⏸️  Rest for 5 seconds before next gesture...")
+                time.sleep(5)
 
     board.release_session()
 
