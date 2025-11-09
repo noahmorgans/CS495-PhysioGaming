@@ -14,11 +14,13 @@ SIGNAL_DIR = os.path.join(BASE_DIR, "Signal Files")
 MODEL_DIR = os.path.join(BASE_DIR, "Model Files")
 ENCODER_DIR = os.path.join(BASE_DIR, "Encoder Files")
 NORM_DIR = os.path.join(BASE_DIR, "Normalization Files")
+TEMPLATE_DIR = os.path.join(BASE_DIR, "Templates")
 
 # Create output directories
 os.makedirs(MODEL_DIR, exist_ok=True)
 os.makedirs(ENCODER_DIR, exist_ok=True)
 os.makedirs(NORM_DIR, exist_ok=True)
+os.makedirs(TEMPLATE_DIR, exist_ok=True)
 
 # Load data from signal directory
 df = pd.read_csv(os.path.join(SIGNAL_DIR, "emg_signals_3(all_group_members).csv"))
@@ -28,6 +30,7 @@ overlap = int(window_size * 0.25)  # 25% overlap
 # Extract raw windows (no feature extraction needed for CNN)
 X_windows = []
 y_labels = []
+
 
 for gesture in sorted(df['label'].unique()):
     subset = df[df['label'] == gesture].drop(['label', 'trial', 'timestamp'], axis=1, errors='ignore').values
@@ -55,6 +58,17 @@ print(f"Number of classes: {n_classes}")
 X_mean = np.mean(X_windows, axis=(0, 1), keepdims=True)
 X_std = np.std(X_windows, axis=(0, 1), keepdims=True)
 X_normalized = (X_windows - X_mean) / (X_std + 1e-8)
+
+#========================================================================================================
+propulsion_mask = (y_labels == "propulsion")   # adjust label string if needed
+rest_mask       = (y_labels == "rest")
+
+propulsion_data = X_normalized[propulsion_mask]   # shape: (N_propulsion, window_size, channels)
+rest_data       = X_normalized[rest_mask]         # shape: (N_rest, window_size, channels)
+
+propulsion_template = propulsion_data.mean(axis=0)   # shape: (window_size, channels)
+rest_template       = rest_data.mean(axis=0)
+#==========================================================================================================
 
 # Split data with larger test set for better evaluation
 X_train, X_test, y_train, y_test = train_test_split(
@@ -157,6 +171,8 @@ joblib.dump({
     'window_size': window_size,
     'overlap': overlap
 }, os.path.join(NORM_DIR, "emg_normalization_3(all_group_members)_(50_window_size).pkl"))
+np.save(os.path.join(TEMPLATE_DIR, "propulsion_template.npy"), propulsion_template)
+np.save(os.path.join(TEMPLATE_DIR, "rest_template.npy"), rest_template)
 
 print("\n Model training complete!")
 print(f"Saved files:")
