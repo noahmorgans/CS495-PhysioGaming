@@ -8,23 +8,30 @@ import time
 from collections import deque
 import tensorflow as tf
 import os
+import matplotlib.pyplot as plt
 
 # Define directory structure (same as above)
 BASE_DIR = "EMG Files"
 MODEL_DIR = os.path.join(BASE_DIR, "Model Files")
 ENCODER_DIR = os.path.join(BASE_DIR, "Encoder Files")
 NORM_DIR = os.path.join(BASE_DIR, "Normalization Files")
+TEMPLATE_DIR = os.path.join(BASE_DIR, "Templates")                                      #plt
 
 # Load files from appropriate directories
 model = tf.keras.models.load_model(os.path.join(MODEL_DIR, "emg_cnn_model_3(all_group_members)_(50_window_size).keras"))
 label_encoder = joblib.load(os.path.join(ENCODER_DIR, "emg_label_encoder_3(all_group_members)_(50_window_size).pkl"))
 norm_params = joblib.load(os.path.join(NORM_DIR, "emg_normalization_3(all_group_members)_(50_window_size).pkl"))
+propulsion_template = np.load(os.path.join(TEMPLATE_DIR, "propulsion_template.npy"))    #plt
+rest_template = np.load(os.path.join(TEMPLATE_DIR, "rest_template.npy"))                #plt
+
 
 ACTIVE_CHANNELS = [0]  # EMG channels to use
 
 X_mean = norm_params['mean'].squeeze()  # Remove extra dimensions
 X_std = norm_params['std'].squeeze()  # Remove extra dimensions
 window_size = norm_params['window_size']
+propulsion_template = propulsion_template[:window_size]                                 #plt
+rest_template = rest_template[:window_size]                                             #plt
 
 # Map numeric predictions to gesture names
 GESTURE_NAMES = {0: "Propulsion", 1: "Rest"}
@@ -124,6 +131,42 @@ def predict_gesture(window):
     
     return gesture_name, confidence, predictions
 
+#===============================================================================================
+def setup_plot():
+    """
+    Create an interactive matplotlib plot showing:
+    - current filtered EMG window
+    - expected template for a gesture
+    """
+    plt.ion()  # interactive mode
+    fig, ax = plt.subplots()
+    input_line, = ax.plot([], [], label="Current EMG window")
+    template_line, = ax.plot([], [], label="Expected template")
+    ax.set_xlabel("Sample")
+    ax.set_ylabel("Amplitude (μV)")
+    ax.set_title("EMG Window vs Expected Template")
+    ax.legend()
+    return fig, ax, input_line, template_line
+
+
+def update_plot(window_1d, template_1d, input_line, template_line, ax):
+    """
+    Update the existing plot with new data.
+    window_1d: 1D numpy array of current filtered EMG for one channel
+    template_1d: 1D numpy array of expected EMG for comparison
+    """
+    n = len(window_1d)
+    t = np.arange(n)
+
+    input_line.set_data(t, window_1d)
+    template_line.set_data(t, template_1d[:n])
+
+    ax.relim()           # recompute limits
+    ax.autoscale_view()  # rescale axes
+    plt.draw()
+    plt.pause(0.001)     # small pause so GUI can update
+
+#===================================================================================================
 def main():
     BoardShim.enable_dev_board_logger()
     logging.basicConfig(level=logging.INFO)
@@ -148,6 +191,10 @@ def main():
     print(f"Window size: {window_size} samples")
     print("\nStarting real-time prediction with signal analysis...")
     print("Press Ctrl+C to stop.\n")
+
+
+    # === Set up matplotlib live plot ===
+    fig, ax, input_line, template_line = setup_plot()
 
     BUFFER_SECONDS = 1
     # Buffer to store incoming data
@@ -190,6 +237,23 @@ def main():
                         )
                     
                     gesture_name, confidence, all_probs = predict_gesture(filtered_window)
+
+                    # === Update live plot: current window vs expected template ===
+                    # Choose which channel to visualize (here: first active channel)
+                    channel_to_plot = 0
+                    current_window_1d = filtered_window[:, channel_to_plot]
+
+                    # Pick template based on predicted gesture name
+                    if gesture_name == "Propulsion":
+                        template_1d = propulsion_template[:window_size]
+                    elif gesture_name == "Rest":
+                        template_1d = rest_template[:window_size]
+                    else:
+                        template_1d = np.zeros_like(current_window_1d)
+
+                    update_plot(current_window_1d, template_1d,
+                                input_line, template_line, ax)
+                    # ===========================================================
                     
                     # Periodic detailed frequency analysis
                     analysis_counter += 1
