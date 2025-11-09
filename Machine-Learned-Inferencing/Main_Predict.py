@@ -20,11 +20,11 @@ SAVE_DIR = os.path.join(BASE_DIR, "Visualizations")
 os.makedirs(SAVE_DIR, exist_ok=True)
 
 # Load files from appropriate directories
-model = tf.keras.models.load_model(os.path.join(MODEL_DIR, "emg_cnn_model_3(all_group_members)_(50_window_size).keras"))
-label_encoder = joblib.load(os.path.join(ENCODER_DIR, "emg_label_encoder_3(all_group_members)_(50_window_size).pkl"))
-norm_params = joblib.load(os.path.join(NORM_DIR, "emg_normalization_3(all_group_members)_(50_window_size).pkl"))
-propulsion_template = np.load(os.path.join(TEMPLATE_DIR, "propulsion_template.npy"))    #plt
-rest_template = np.load(os.path.join(TEMPLATE_DIR, "rest_template.npy"))                #plt
+model = tf.keras.models.load_model(os.path.join(MODEL_DIR, "emg_cnn_model_3(TEMPLATES_TEST).keras"))
+label_encoder = joblib.load(os.path.join(ENCODER_DIR, "emg_label_encoder_3(TEMPLATES_TEST).pkl"))
+norm_params = joblib.load(os.path.join(NORM_DIR, "emg_normalization_3(TEMPLATES_TEST).pkl"))
+propulsion_template = np.load(os.path.join(TEMPLATE_DIR, "propulsion_template(TEMPLATES_TEST).npy"))    #plt
+rest_template = np.load(os.path.join(TEMPLATE_DIR, "rest_template(TEMPLATES_TEST).npy"))                #plt
 
 
 ACTIVE_CHANNELS = [0]  # EMG channels to use
