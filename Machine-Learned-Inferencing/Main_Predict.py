@@ -16,6 +16,8 @@ MODEL_DIR = os.path.join(BASE_DIR, "Model Files")
 ENCODER_DIR = os.path.join(BASE_DIR, "Encoder Files")
 NORM_DIR = os.path.join(BASE_DIR, "Normalization Files")
 TEMPLATE_DIR = os.path.join(BASE_DIR, "Templates")                                      #plt
+SAVE_DIR = os.path.join(BASE_DIR, "Visualizations")
+os.makedirs(SAVE_DIR, exist_ok=True)
 
 # Load files from appropriate directories
 model = tf.keras.models.load_model(os.path.join(MODEL_DIR, "emg_cnn_model_3(all_group_members)_(50_window_size).keras"))
@@ -149,7 +151,7 @@ def setup_plot():
     return fig, ax, input_line, template_line
 
 
-def update_plot(window_1d, template_1d, input_line, template_line, ax):
+def update_plot(window_1d, template_1d, input_line, template_line, ax, gesture_name):
     """
     Update the existing plot with new data.
     window_1d: 1D numpy array of current filtered EMG for one channel
@@ -165,6 +167,20 @@ def update_plot(window_1d, template_1d, input_line, template_line, ax):
     ax.autoscale_view()  # rescale axes
     plt.draw()
     plt.pause(0.001)     # small pause so GUI can update
+
+    save_dir = os.path.join("EMG Files", "Visualizations")
+    os.makedirs(save_dir, exist_ok=True)
+
+    plt.figure()
+    plt.plot(window_1d, label="Current EMG window")
+    plt.plot(template_1d, label="Template")
+    plt.xlabel("Sample Index")
+    plt.ylabel("Normalized Amplitude")
+    plt.title(f"Live EMG vs {gesture_name} Template")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(os.path.join(save_dir, f"{gesture_name.lower()}_comparison.png"), dpi=300)
+    plt.close()
 
 #===================================================================================================
 def main():
@@ -252,7 +268,7 @@ def main():
                         template_1d = np.zeros_like(current_window_1d)
 
                     update_plot(current_window_1d, template_1d,
-                                input_line, template_line, ax)
+                                input_line, template_line, ax, gesture_name)
                     # ===========================================================
                     
                     # Periodic detailed frequency analysis
