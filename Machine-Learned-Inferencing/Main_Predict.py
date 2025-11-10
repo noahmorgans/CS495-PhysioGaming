@@ -261,9 +261,9 @@ def main():
 
                     # Pick template based on predicted gesture name
                     if gesture_name == "Propulsion":
-                        template_1d = propulsion_template[:channel_to_plot]
+                        template_1d = propulsion_template[:, channel_to_plot]
                     elif gesture_name == "Rest":
-                        template_1d = rest_template[:channel_to_plot]
+                        template_1d = rest_template[:, channel_to_plot]
                     else:
                         template_1d = np.zeros_like(current_window_1d)
 
