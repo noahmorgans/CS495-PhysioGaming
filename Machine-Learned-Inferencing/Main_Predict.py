@@ -124,8 +124,8 @@ def predict_gesture(window):
     
     # Predict
     predictions = model.predict(window_batch, verbose=0)[0]
-    predicted_class = np.argmax(predictions)
-    confidence = predictions[predicted_class]
+    predicted_class = int(np.argmax(predictions))
+    confidence = float(predictions[predicted_class])
     
     # Get gesture name
     gesture_label = label_encoder.inverse_transform([predicted_class])[0]
@@ -266,6 +266,11 @@ def main():
                         template_1d = rest_template[:, channel_to_plot]
                     else:
                         template_1d = np.zeros_like(current_window_1d)
+
+                    print(
+                        f"\ncur range [{current_window_1d.min():.2f}, {current_window_1d.max():.2f}], "
+                        f"template range [{template_1d.min():.2f}, {template_1d.max():.2f}]"
+                    )
 
                     update_plot(current_window_1d, template_1d,
                                 input_line, template_line, ax, gesture_name)
