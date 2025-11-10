@@ -16,6 +16,7 @@ ENCODER_DIR = os.path.join(BASE_DIR, "Encoder Files")
 NORM_DIR = os.path.join(BASE_DIR, "Normalization Files")
 TEMPLATE_DIR = os.path.join(BASE_DIR, "Templates")
 
+
 # Create output directories
 os.makedirs(MODEL_DIR, exist_ok=True)
 os.makedirs(ENCODER_DIR, exist_ok=True)
