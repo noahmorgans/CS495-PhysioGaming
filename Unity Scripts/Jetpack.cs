@@ -14,8 +14,8 @@ public class Jetpack : MonoBehaviour
     private float overheatAmount = 0f;
     private float overheatCap = 1f;
     private float overheatRate = 0.5f;   // how fast it heats up
-    private float coolRate = 0.2f;       // how fast it cools per second
-    private float cooldownDelay = 2f;    // delay before cooling starts
+    private float coolRate = 0.8f;       // how fast it cools per second
+    private float cooldownDelay = 3f;    // delay before cooling starts
 
     private Coroutine cooldownCoroutine;
 
@@ -89,6 +89,16 @@ public class Jetpack : MonoBehaviour
     public void BurnFuel()
     {
         isFuelBurning = true;
+    }
+
+    public void ResetCooldown()
+    {
+        overheatAmount = 0f;
+
+        OnOverheatChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
+        {
+            progressNormalized = overheatAmount / overheatCap
+        });
     }
 
     public void RefillFuel(float refuelAmt)

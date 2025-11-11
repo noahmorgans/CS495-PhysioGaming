@@ -19,6 +19,7 @@ public class Player : LivingObject
     [SerializeField] private float gravityModifier = 1; //Should probably move this out of player script
     private string coinTag = "Coin";
     private string fuelTag = "Fuel";
+    private string cooldownTag = "Cooldown";
     private string respawnTag = "Lvl1Respawn";
     private string gasStationTag = "7-11";
 
@@ -146,6 +147,12 @@ public class Player : LivingObject
         else if (other.gameObject.CompareTag(respawnTag))
         {
             transform.position = new Vector3(-43.99f, 3.49f, 186.37f);
+            jetpack.ResetCooldown();
+        }
+        else if (other.gameObject.CompareTag(cooldownTag))
+        {
+            jetpack.ResetCooldown();
+            Destroy(other.gameObject);
         }
     }
 
@@ -161,7 +168,7 @@ public class Player : LivingObject
             {
                 if(jetpack.GetFuelAmount() < 1f)
                 {
-                    jetpack.RefillFuel(.001f);
+                    jetpack.RefillFuel(.01f);
                 }
                 break; // Call once per frame if at least one tagged object is nearby
             }

@@ -1,18 +1,28 @@
 using System;
 using UnityEngine;
+using TMPro;
 
-public class CoinBag : MonoBehaviour, IHasProgressInt
+public class CoinBag : MonoBehaviour
 {
     private int _coinCount = 0;
-    public event EventHandler<IHasProgressInt.OnProgressChangedIntEventArgs> OnProgressChanged;
+    public static CoinBag instance;
+
+    [SerializeField] private TextMeshProUGUI scoreText;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    void Start()
+    {
+        UpdateScoreText();
+    }
 
     public void AddCoin()
     {
         _coinCount++;
-        OnProgressChanged?.Invoke(this, new IHasProgressInt.OnProgressChangedIntEventArgs
-        {
-            count = _coinCount
-        });
+        UpdateScoreText();
     }
 
     public void RemoveCoin()
@@ -20,10 +30,13 @@ public class CoinBag : MonoBehaviour, IHasProgressInt
         if (_coinCount > 0)
         {
             _coinCount--;
-            OnProgressChanged?.Invoke(this, new IHasProgressInt.OnProgressChangedIntEventArgs
-            {
-                count = _coinCount
-            });
+            UpdateScoreText();
         }
+    }
+
+    private void UpdateScoreText()
+    {
+        if (scoreText != null)
+            scoreText.text = _coinCount.ToString("D3");
     }
 }

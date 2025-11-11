@@ -6,6 +6,7 @@ public class LivingObject : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     private float groundRaycastDistance = 0.6f;
     public float jumpForce = 4.75f;
+    public float thrust = 4.5f;
     public float lungeSpeed = 8f;
     private bool isMoving = false;
     private bool isDead = false;
@@ -23,8 +24,8 @@ public class LivingObject : MonoBehaviour
     void FixedUpdate()
     {
         // Only apply thrust while flying
-        if (isFlying)
-            Fly();
+        //if (isFlying)
+        //    Fly();
     }
 
     public bool IsGrounded()
@@ -53,9 +54,9 @@ public class LivingObject : MonoBehaviour
     {
         isLungeReady = false;
         isLunging = true;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(3f);
         isLunging = false;
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(7f);
         isLungeReady = true;
     }
 
@@ -72,7 +73,7 @@ public class LivingObject : MonoBehaviour
         //rigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         else
         {
-            rigid.AddForce(Vector3.up * jumpForce, ForceMode.Acceleration);
+            rigid.AddForce(Vector3.up * thrust, ForceMode.Acceleration);
         }
     }
     public bool IsFlying()
