@@ -1,0 +1,106 @@
+body { 
+    background-color: #242c57;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* border-radius: 10px 10px 10px 10px; */
+ }
+
+ .text{
+    color: #ffffff;
+ }
+
+#unity-container { position: relative;}
+#unity-container.unity-mobile { position: fixed; width: 100%; height: 100% }
+#unity-canvas { 
+    position: static;
+    background: #231F20;
+    border: 1px solid #3f3428;
+    border-radius: 10px;
+    transform: translateX(50%);
+}
+.unity-mobile #unity-canvas { width: 100%; height: 100% }
+#unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none }
+#unity-logo { width: 154px; height: 130px; background: url('unity-logo-dark.png') no-repeat center }
+#unity-progress-bar-empty { width: 141px; height: 18px; margin-top: 10px; margin-left: 6.5px; background: url('progress-bar-empty-dark.png') no-repeat center }
+#unity-progress-bar-full { width: 0%; height: 18px; margin-top: 10px; background: url('progress-bar-full-dark.png') no-repeat center }
+#unity-footer { position: relative ; padding-top: 20px; padding-bottom: 60px;}
+.unity-mobile #unity-footer { display: none }
+#unity-logo-title-footer { float:left; width: 102px; height: 38px; background: url('unity-logo-title-footer.png') no-repeat center }
+#unity-build-title { float: right; margin-right: 10px; line-height: 38px; font-family: arial; font-size: 18px }
+#unity-fullscreen-button { cursor:pointer; float: right; width: 38px; height: 38px; background: url('fullscreen-button.png') no-repeat center }
+#unity-warning { position: absolute; left: 50%; top: 5%; transform: translate(-50%); background: white; padding: 10px; display: none }
+
+/*Collapsed*/
+.collapsible {
+  background-color: #242c57;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  border-radius: 10px;
+}
+
+/*Hover*/
+.active, .collapsible:hover {
+  background-color: #fff;
+  color: black;
+  border-radius: 10px;
+}
+
+/*Expanded*/
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #242c57;
+  color: #ffffff;
+  border-radius: 10px;
+}
+
+/* CSS */
+#ganglion {
+    position: static;
+    width: 150px;
+    height: 25px;
+    appearance: none;
+    background-color: #ffffff;
+    border: 2px solid #ffffff;
+    border-radius: 15px;
+    box-sizing: border-box;
+    color: #000000;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: normal;
+    margin: 0;
+    min-height: 60px;
+    min-width: 0;
+    outline: none;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform;
+}
+
+#ganglion:disabled {
+    pointer-events: none;
+}
+
+#ganglion:hover {
+    color: #fff;
+    background-color: #1A1A1A;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+}
+
+#ganglion:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
