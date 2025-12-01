@@ -216,7 +216,7 @@ def main():
     fig, ax, input_line, template_line = setup_plot()
 
     # Buffer to store incoming data
-    data_buffer = deque(maxlen=100) # same as window size
+    data_buffer = deque(maxlen=window_size)
     
     # Counter for periodic detailed analysis
     analysis_counter = 0
