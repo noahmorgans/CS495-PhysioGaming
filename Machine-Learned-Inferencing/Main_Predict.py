@@ -132,7 +132,7 @@ def predict_gesture(window):
     
     # Get gesture name
     gesture_label = label_encoder.inverse_transform([predicted_class])[0]
-    gesture_name = GESTURE_NAMES.get(int(gesture_label), f"Unknown ({gesture_label})")
+    gesture_name = GESTURES.get(int(gesture_label), f"Unknown ({gesture_label})")
     
     return gesture_name, confidence, predictions
 
