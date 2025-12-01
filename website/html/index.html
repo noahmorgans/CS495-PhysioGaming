@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>CS495_PhysioGaming</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <!-- <link rel="stylesheet" href="style.css"> -->
+  </head>
+  <body>
+    <h1 class="text">CS 495 Physio Gaming</h1>
+
+    <hr>
+
+    <div id="overview" class="text">
+    <h2>Project Overview</h2>
+    <p>
+      The goal of this project is to create a web based framework to utilize electrical signals from muscle groups (electromyography)
+      as an engaging and novel input system for a video game. The applications of such a system go beyond pure entertainment, it has
+      the potential to expand accessability for the physically impaired, and to assist in environments / situations that make traditional
+      input methods less practical.
+    </p>
+    <p>There are a few major components of the project:</p>
+    <ul>
+      <li>Obtaining Sensor Input</li>
+      <li>Javascript Sensor Data Pipeline</li>
+      <li>ML Model Training</li>
+      <li>ML Model Inferencing</li>
+      <li>Unity Game</li>
+    </ul>
+    </div>
+    
+    <hr>
+
+    <div id="unity-container" class="unity-desktop">
+      <div>
+        <h2 class="text">Live Demo</h2>
+        <button id="ganglion">Connect Sensor</button>
+        <p style="display: none;">Current value: <span id="filtered-sample">0</span></p>
+      </div>
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-logo-title-footer"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">CS495_PhysioGaming</div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div id="setup" class="text">
+      <h2>Project Setup</h2>
+      <button type="button" class="collapsible">Unity</button>
+      <div class="content">
+        <p>Unity Instructions</p>
+      </div>
+
+      <button type="button" class="collapsible">Python</button>
+      <div class="content">
+        <p>Python Instructions</p>
+      </div>
+
+      <button type="button" class="collapsible">Javascript Pipeline</button>
+      <div class="content">
+        <p>JS Pipeline Instructions</p>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <div id="features" class="text">
+      <h2>Features</h2>
+      <button type="button" class="collapsible">Unity - Gameplay</button>
+      <div class="content">
+        <p>
+          FlyWorld has been expanded significantly from Dr. Crawford’s original product. 
+          We believe he may want the game to go in a different direction from what we have done with it,
+           but we will list the features we have implemented here in case they can be repurposed for a different game.
+        </p>
+        
+      </div>
+      <button type="button" class="collapsible">Movement</button>
+      <div class="content">
+        <p>
+          Right now, there are three methods of movement. The character can walk using WASD. This offers a fixed camera 
+          movement system where the camera rotates with the player. The player’s walk speed can be modified in the right-hand 
+          menu when the player is selected in the Unity environment.
+        </p>
+        <p>
+          The second way the character can move is vertically, using LShift or the EMG device. This will activate the jetpack, 
+          which accelerates the character upward. While moving up, WASD can still be used to move the character. Using the jetpack 
+          consumes fuel and overheats the jetpack. Both of these values can be observed in the top right corner of the UI. Once the 
+          overheat bar is full or the fuel bar is empty, the jetpack is rendered unusable until there is more than 0 fuel or less 
+          than full overheat.
+        </p>
+        <p>
+          The third method of movement is the LUNGE feature, which is an alternate way for the jetpack to move. When hitting LCtrl, the 
+          jetpack flames turn blue, and pressing LShift or using the EMG device makes the player fly forward extremely fast. This effect 
+          is temporary, lasting 3 seconds, and has a 7-second cooldown before it can be used again.
+        </p>
+      </div>
+
+      <button type="button" class="collapsible">Prefabs</button>
+      <div class="content">
+        <p>
+          We have added several prefabs that could be helpful in creating a level, regardless of whether the current form of the game is 
+          continued or changed to something else (to something like Temple Run). Currently, there are four relevant prefabs used in FlyWorld. 
+          To add a prefab to a scene, drag it from the assets menu at the bottom into the scene in the editor.
+        </p>
+        <p>
+          The BetterCoin, BetterFuel, and CooldownCrystals are all pickups that can be touched by the player to either add to their coin balance, 
+          refill their fuel, or cool down their jetpack. The items are destroyed on collision with the player, and the CoinBag and Jetpack objects 
+          associated with the Player object are updated to reflect the new value.
+        </p>
+        <p>
+          There is also a gas station prefab, Fuel Pump 3D, that was intended to be used as a checkpoint for the player. Currently, it will infinitely 
+          refill the player’s fuel while they are within a certain distance of the station.
+        </p>
+      </div>
+
+      <button type="button" class="collapsible">Levels</button>
+      <div class="content">
+        <p>
+          We currently have one level as a proof of concept for FlyWorld. It is called TestLevel in the Scenes folder. It is a simple platforming level 
+          that showcases the different prefabs and features we have added to the game. We recommend exploring this level to get an understanding of the 
+          mechanics currently in place in Unity.
+        </p>
+        <p>
+          Much of what is present in FlyWorld uses free assets from the Unity store. We are not professional model creators, nor even amateur model creators, 
+          so the only original content visually is the HUD.
+        </p>
+        
+      </div>
+
+      <button type="button" class="collapsible">Machine Learning</button>
+      <div class="content">
+        <p>
+          For this project, we used a 1D CNN to classify gestures. Our initial goal was to classify a fist squeeze vs. a hand at rest in order to control jetpack 
+          propulsion. We were able to achieve this goal with a relatively high level of accuracy. Other ideas we had that we weren’t able to complete were 
+          implementing a model that predicts rock vs. paper vs. scissors and implementing a model that controls a much more diverse set of movements. 
+        </p>
+        <p>
+          The machine learning pipeline has three primary files: Main_CollectData.py, Main_Train.py, and Main_Predict.py. The data collection file collects data 
+          for each of the gestures trained on. The training file then uses the data and the 1D CNN to train an ML model for gesture classification. The prediction 
+          file loads the trained ML model and does live predictions so that model accuracy can be observed on the backend.
+        </p>
+        
+      </div>
+
+    </div>
+
+    <hr>
+
+    <div id="goingfwd" class="text">
+      <h2>Going Forward</h2>
+      <p>Insert stuff Here</p>
+    </div>
+
+    <hr>
+
+    <div id="faqs" class="text">
+      <h2>FAQ's</h2>
+      <b>Q: None of the input buttons work in Unity after I loaded the project package. How do I fix it?</b>
+      <p>
+        A: Dr. Crawford’s input controls work on Unity’s legacy control system. By default, the Unity Editor will use the new input system on a new project. 
+        Go to Edit -> Project Settings -> Player and change “Active Input Handling” to “Input Manager (Old)”.
+      </p>
+ 
+      <b>Q:  The player object doesn’t have gravity applied to it, and none of the collisions are working. How do I fix it?</b>
+      <p>
+        A:  Go to Edit -> Project Settings -> Physics and change GameObject SDK to “PhysX”. Then go to Physics -> Settings -> 
+        GameObject and change Simulation Mode to “Update”.
+      </p>
+  
+      <b>Q: </b>
+      <p>A: </p>
+    </div>
+
+    <hr>
+
+    <div id="contributors" class="text">
+      <h2>Contributors</h2>
+      <p>Noah Morgans</p>
+      <p>Cade Dees</p>
+      <p>John Byrd</p>
+      <p>Josh Hipps</p>
+      <p>Sam Daly</p>
+    </div>
+
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+      //*****
+      var myGameInstance = null;
+      //
+
+      // Shows a temporary message banner/ribbon for a few seconds, or
+      // a permanent error message on top of the canvas if type=='error'.
+      // If type=='warning', a yellow highlight color is used.
+      // Modify or remove this function to customize the visually presented
+      // way that non-critical warnings and error messages are presented to the
+      // user.
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/Build.loader.js";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/Build.data",
+        frameworkUrl: buildUrl + "/Build.framework.js",
+        codeUrl: buildUrl + "/Build.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "CS495_PhysioGaming",
+        productVersion: "0.1.0",
+        showBanner: unityShowBanner,
+        // errorHandler: function(err, url, line) {
+        //    alert("error " + err + " occurred at line " + line);
+        //    // Return 'true' if you handled this error and don't want Unity
+        //    // to process it further, 'false' otherwise.
+        //    return true;
+        // },
+      };
+
+      // By default, Unity keeps WebGL canvas render target size matched with
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      // config.matchWebGLToCanvasSize = false;
+
+      // If you would like all file writes inside Unity Application.persistentDataPath
+      // directory to automatically persist so that the contents are remembered when
+      // the user revisits the site the next time, uncomment the following line:
+      // config.autoSyncPersistentDataPath = true;
+      // This autosyncing is currently not the default behavior to avoid regressing
+      // existing user projects that might rely on the earlier manual
+      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
+      // expected to change.
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
+
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
+
+
+      } else {
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
+      }
+
+      document.querySelector("#unity-loading-bar").style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+              }).then((unityInstance) => {
+                //****
+                myGameInstance = unityInstance;
+                //
+                document.querySelector("#unity-loading-bar").style.display = "none";
+                document.querySelector("#unity-fullscreen-button").onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
+
+              }).catch((message) => {
+                alert(message);
+              });
+            };
+
+      document.body.appendChild(script);
+
+    </script>
+    <!-- **** -->
+      <body style="padding: 10px">
+        </div>
+        <script>
+          setInterval(function() {
+            myGameInstance.SendMessage('JS_Hook', 'UpdateText', document.getElementById('filtered-sample').innerHTML);
+          }, 1);
+        </script>
+        <!-- -->
+
+
+
+        <div id="page-footer">
+          <p>December 2025</p>
+        </div>
+  </body>
+  <!-- **** -->
+  <script type="module" src="datastream.js"></script>
+  <!-- -->
+
+  <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+          content.style.display = "none";
+        } else {
+          content.style.display = "block";
+        }
+      });
+    }
+  </script>
+
+</html>
