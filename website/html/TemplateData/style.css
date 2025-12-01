@@ -104,3 +104,8 @@ body {
     box-shadow: none;
     transform: translateY(0);
 }
+
+#page-footer{
+  color: #838383;
+  text-align: center;
+}
