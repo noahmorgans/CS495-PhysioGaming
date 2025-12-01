@@ -212,7 +212,7 @@ def main():
     # === Set up matplotlib live plot ===
     fig, ax, input_line, template_line = setup_plot()
 
-    BUFFER_SECONDS = 1
+    BUFFER_SECONDS = 0.5
     # Buffer to store incoming data
     data_buffer = deque(maxlen=int(BUFFER_SECONDS * sampling_rate))
     
