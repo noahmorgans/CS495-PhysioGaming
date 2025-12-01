@@ -36,7 +36,10 @@ propulsion_template = propulsion_template[:window_size]                         
 rest_template = rest_template[:window_size]                                             #plt
 
 # Map numeric predictions to gesture names
-GESTURE_NAMES = {0: "Propulsion", 1: "Rest"}
+GESTURES = {
+    0: "Propulsion", 
+    1: "Rest"
+    }
 
 def apply_notch_filter(data, fs, notch_freq=60.0, quality_factor=30.0):
     """
