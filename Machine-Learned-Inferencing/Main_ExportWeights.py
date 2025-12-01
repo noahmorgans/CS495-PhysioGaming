@@ -8,8 +8,8 @@ BASE_DIR = "EMG Files"
 MODEL_DIR = os.path.join(BASE_DIR, "Model Files")
 
 # Model you saved in train_model.py
-MODEL_FILENAME = "emg_cnn_model_3(TEMPLATES_TEST).keras"
-WEIGHTS_FILENAME = "emg_cnn_weights_3(TEMPLATES_TEST).npz"
+MODEL_FILENAME = "emg_cnn_model_3(all_group_members).keras"
+WEIGHTS_FILENAME = "emg_cnn_weights_3(all_group_members).npz"
 
 model_path = os.path.join(MODEL_DIR, MODEL_FILENAME)
 weights_path = os.path.join(MODEL_DIR, WEIGHTS_FILENAME)

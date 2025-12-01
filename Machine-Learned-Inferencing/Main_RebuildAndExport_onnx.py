@@ -9,8 +9,8 @@ BASE_DIR = "EMG Files"
 MODEL_DIR = os.path.join(BASE_DIR, "Model Files")
 
 # Files from training / export steps
-WEIGHTS_FILENAME = "emg_cnn_weights_3(TEMPLATES_TEST).npz"
-ONNX_FILENAME    = "emg_cnn_model_3(TEMPLATES_TEST).onnx"
+WEIGHTS_FILENAME = "emg_cnn_weights_3(all_group_members).npz"
+ONNX_FILENAME    = "emg_cnn_model_3(all_group_members).onnx"
 
 # match training script
 WINDOW_SIZE = 100  # from train_model.py: window_size = 100
