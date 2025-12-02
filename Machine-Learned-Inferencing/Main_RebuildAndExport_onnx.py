@@ -9,8 +9,8 @@ BASE_DIR = "EMG Files"
 MODEL_DIR = os.path.join(BASE_DIR, "Model Files")
 
 # Files from training / export steps
-WEIGHTS_FILENAME = "emg_cnn_weights_3(all_group_members).npz"
-ONNX_FILENAME    = "emg_cnn_model_3(all_group_members).onnx"
+WEIGHTS_FILENAME = "emg_cnn_weights_4(new_electrode_placement).npz"
+ONNX_FILENAME    = "emg_cnn_model_4(new_electrode_placement).onnx"
 
 # match training script
 WINDOW_SIZE = 100  # from train_model.py: window_size = 100
@@ -41,7 +41,7 @@ print(f"Inferred number of classes from final bias: n_classes={n_classes}")
 
 def build_cnn_model(input_shape, n_classes):
     """
-    Rebuilds the SAME architecture as in train_model.py:
+    Rebuilds the same architecture as in train_model.py:
 
         Sequential([
             Conv1D(16, kernel_size=5, activation='relu', padding='same', input_shape=input_shape),
