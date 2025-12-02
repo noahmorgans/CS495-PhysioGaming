@@ -98,7 +98,6 @@ const handleTrack = (track) => {
     */
 
     if (i == 0) {
-      console.log(filteredSample);
       sampleDiv.innerHTML = filteredSample;
       visualizer.updateTrackData(i, filteredSample);
     }
