@@ -1,0 +1,3 @@
+Query,Description,Severity,Message,Location,Start Line,Start Col,End Line,End Col
+Binding a socket to all network interfaces,Binding a socket to all interfaces opens it up to traffic from any IPv4 address and is therefore associated with security risks.,error,'' binds a socket to all interfaces.,/Sensor/sensor_raw_threshold.py,50,1,50,27
+Binding a socket to all network interfaces,Binding a socket to all interfaces opens it up to traffic from any IPv4 address and is therefore associated with security risks.,error,'' binds a socket to all interfaces.,/Sensor/sockets.py,40,1,40,27
