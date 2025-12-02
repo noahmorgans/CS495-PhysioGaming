@@ -9,7 +9,12 @@
     <!-- <link rel="stylesheet" href="style.css"> -->
   </head>
   <body>
-    <h1 class="text">CS 495 Physio Gaming</h1>
+    <div id="heading">
+      <h1>CS 495 Physio Gaming</h1>
+      <a href="https://github.com/noahmorgans/CS495-PhysioGaming">
+        <img src="github.svg" id="gitlnk">
+      </a>
+    </div>
 
     <hr>
 
@@ -29,6 +34,20 @@
       <li>ML Model Inferencing</li>
       <li>Unity Game</li>
     </ul>
+
+    <p>
+      The EMG data is acquired via OpenBCI's 
+      <a href="https://docs.openbci.com/GettingStarted/Boards/GanglionGS/">Ganglion board.</a>
+      The sensor information is read and filtered by the Javascript Pipeline's datastream.js file. 
+      The filtered value is then stored as text in index.html and passed to Unity by the following code:
+    </p>
+    <p class="snippet">myGameInstance.SendMessage('JS_Hook', 'UpdateText', document.getElementById('filtered-sample').innerHTML)</p>
+    <p>
+      The important part to note is that in the active Unity scene there needs to be an object named "JS_Hook" and 
+      it needs to have a script attatched to it with a function called "UpdateText". The exact names can be changed, but
+      the object and function names need to match between Unity and the SendMessage call.
+    </p>
+    <p>Once Unity has the EMG data it is run through a machine learning model. [INSERT ML Overview]</p>
     </div>
     
     <hr>

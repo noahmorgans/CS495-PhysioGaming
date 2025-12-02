@@ -1,19 +1,34 @@
 body { 
-    background-color: #242c57;
+    background-color: #ffffff;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     /* border-radius: 10px 10px 10px 10px; */
  }
 
  .text{
-    color: #ffffff;
+    color: black;
  }
+
+.snippet{
+  text-indent: 10px;
+  background-color: #e9daa1;
+  border-radius: 10px;
+  padding: 5px;
+  width: 80%;
+  left: 20%;
+}
+
+#gitlnk{
+  width: 15;
+  height: 15;
+}
+
+
 
 #unity-container { position: relative;}
 #unity-container.unity-mobile { position: fixed; width: 100%; height: 100% }
 #unity-canvas { 
     position: static;
     background: #231F20;
-    border: 1px solid #3f3428;
     border-radius: 10px;
     transform: translateX(50%);
 }
@@ -31,10 +46,11 @@ body {
 
 /*Collapsed*/
 .collapsible {
-  background-color: #242c57;
+  background-color: #000000;
   color: #ffffff;
   cursor: pointer;
   padding: 18px;
+  margin-bottom: 5px;
   width: 100%;
   border: none;
   text-align: left;
@@ -45,8 +61,8 @@ body {
 
 /*Hover*/
 .active, .collapsible:hover {
-  background-color: #fff;
-  color: black;
+  background-color: #000000;
+  color: rgb(255, 255, 255);
   border-radius: 10px;
 }
 
@@ -55,8 +71,8 @@ body {
   padding: 0 18px;
   display: none;
   overflow: hidden;
-  background-color: #242c57;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #000000;
   border-radius: 10px;
 }
 
@@ -64,13 +80,13 @@ body {
 #ganglion {
     position: static;
     width: 150px;
-    height: 25px;
+    height: 15px;
     appearance: none;
-    background-color: #ffffff;
-    border: 2px solid #ffffff;
+    background-color: #000000;
+    border: 2px solid #000000;
     border-radius: 15px;
     box-sizing: border-box;
-    color: #000000;
+    color: #ffffff;
     cursor: pointer;
     font-size: 12px;
     font-weight: 600;
