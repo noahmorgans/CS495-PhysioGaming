@@ -32,10 +32,10 @@ Unity - Gameplay:
 	
 	Movement:
 		Right now, there are three methods of movement. The character can walk using WASD. This offers a fixed camera movement system where the camera rotates with the player. The player’s walk speed can be modified in the right-hand menu when the player is selected in the Unity environment.
-	
-		The second way the character can move is vertically, using LShift or the EMG device. This will activate the jetpack, which accelerates the character upward. While moving up, WASD can still be used to move the character. Using the jetpack consumes fuel and overheats the jetpack. Both of these values can be observed in the top right corner of the UI. Once 		the overheat bar is full or the fuel bar is empty, the jetpack is rendered unusable until there is more than 0 fuel or less than full overheat.
-	
-		The third method of movement is the LUNGE feature, which is an alternate way for the jetpack to move. When hitting LCtrl, the jetpack flames turn blue, and pressing LShift or using the EMG device makes the player fly forward extremely fast. This effect is temporary, lasting 3 seconds, and has a 7-second cooldown before it can be used again.
+		The second way the character can move is vertically, using LShift or the EMG device. This will activate the jetpack, which accelerates the character upward. While moving up, WASD can still be used to move the character.
+		Using the jetpack consumes fuel and overheats the jetpack. Both of these values can be observed in the top right corner of the UI. Once the overheat bar is full or the fuel bar is empty, the jetpack is rendered unusable until there is more than 0 fuel or less than full overheat.
+		The third method of movement is the LUNGE feature, which is an alternate way for the jetpack to move. When hitting LCtrl, the jetpack flames turn blue, and pressing LShift or using the EMG device makes the player fly forward extremely fast. 
+		This effect is temporary, lasting 3 seconds, and has a 7-second cooldown before it can be used again.
 		
 	Prefabs:
 		We have added several prefabs that could be helpful in creating a level, regardless of whether the current form of the game is continued or changed to something else (to something like Temple Run). Currently, there are four relevant prefabs used in FlyWorld. To add a prefab to a scene, drag it from the assets menu at the bottom into the scene in the 			editor.
