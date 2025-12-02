@@ -35,7 +35,7 @@ Unity - Gameplay:
 		The third method of movement is the LUNGE feature, which is an alternate way for the jetpack to move. When hitting LCtrl, the jetpack flames turn blue, and pressing LShift or using the EMG device makes the player fly forward extremely fast. This effect is temporary, lasting 3 seconds, and has a 7-second cooldown before it can be used again.
 		
 	Prefabs:
-		We have added several prefabs that could be helpful in creating a level, regardless of whether the current form of the game is continued or changed to something else (to something like Temple Run). Currently, there are four relevant prefabs used in FlyWorld. To add a prefab to a scene, drag it from the assets menu at the bottom into the scene in the editor.
+		We have added several prefabs that could be helpful in creating a level, regardless of whether the current form of the game is continued or changed to something else (to something like Temple Run). Currently, there are four relevant prefabs used in FlyWorld. To add a prefab to a scene, drag it from the assets menu at the bottom into the scene in the 			editor.
 	
 		The BetterCoin, BetterFuel, and CooldownCrystals are all pickups that can be touched by the player to either add to their coin balance, refill their fuel, or cool down their jetpack. The items are destroyed on collision with the player, and the CoinBag and Jetpack objects associated with the Player object are updated to reflect the new value.
 	
@@ -48,9 +48,8 @@ Unity - Gameplay:
 	
 	Unity - Sensor:
 		The JavaScript pipeline reads sensor data through the datastream.js file, which in turn is called by including the script in index.html. This data is then stored as text in index.html and sent to Unity by the following script:
-
-
-What this script does is periodically send the contents of the “filtered-sample” text element to a function called UpdateText associated with an object called JS_Hook. To put it another way, you need to have an object in the active Unity scene with the name JS_Hook, and it needs to have a script attached to it with an UpdateText function that takes a single argument. The exact names can be changed, but they need to match in this code in index.html and in the Unity editor. Once the function has the sensor data, Unity can perform further operations, such as passing it through an inference model.
+		What this script does is periodically send the contents of the “filtered-sample” text element to a function called UpdateText associated with an object called JS_Hook. 
+		To put it another way, you need to have an object in the active Unity scene with the name JS_Hook, and it needs to have a script attached to it with an UpdateText function that takes a 			single argument. The exact names can be changed, but they need to match in this code in index.html and in the Unity editor. Once the function has the sensor 			data, Unity can perform further operations, such as passing it through an inference model.
 
 IMPORTANT: Note that as of now, the machine learning model is not implemented in the pipeline. A lot of work was put into the model, so we are including it with the project when sending it along; however, we had trouble getting it to work consistently using Unity and have opted to substitute it with a simple thresholding method that achieves the base goal of the project. The following feature list can be used as a rough outline of what exists in the ML model independently of the pipeline.
 
