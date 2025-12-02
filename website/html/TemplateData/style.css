@@ -22,6 +22,9 @@ body {
   height: 15;
 }
 
+#demo{
+  margin-bottom: 20px;
+}
 
 
 #unity-container { position: relative;}

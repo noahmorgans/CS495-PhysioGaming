@@ -3,12 +3,61 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | CS495_PhysioGaming</title>
+    <title>CS495_PhysioGaming</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+    <!-- <link rel="stylesheet" href="style.css"> -->
   </head>
   <body>
+    <div id="heading">
+      <h1>CS 495 Physio Gaming</h1>
+      <a href="https://github.com/noahmorgans/CS495-PhysioGaming">
+        <img src="github.svg" id="gitlnk">
+      </a>
+    </div>
+
+    <hr>
+
+    <div id="overview" class="text">
+    <h2>Project Overview</h2>
+    <p>
+      The goal of this project is to create a web based framework to utilize electrical signals from muscle groups (electromyography)
+      as an engaging and novel input system for a video game. The applications of such a system go beyond pure entertainment, it has
+      the potential to expand accessability for the physically impaired, and to assist in environments / situations that make traditional
+      input methods less practical.
+    </p>
+    <p>There are a few major components of the project:</p>
+    <ul>
+      <li>Obtaining Sensor Input</li>
+      <li>Javascript Sensor Data Pipeline</li>
+      <li>ML Model Training</li>
+      <li>ML Model Inferencing</li>
+      <li>Unity Game</li>
+    </ul>
+
+    <p>
+      The EMG data is acquired via OpenBCI's 
+      <a href="https://docs.openbci.com/GettingStarted/Boards/GanglionGS/">Ganglion board.</a>
+      The sensor information is read and filtered by the Javascript Pipeline's datastream.js file. 
+      The filtered value is then stored as text in index.html and passed to Unity by the following code:
+    </p>
+    <p class="snippet">myGameInstance.SendMessage('JS_Hook', 'UpdateText', document.getElementById('filtered-sample').innerHTML)</p>
+    <p>
+      The important part to note is that in the active Unity scene there needs to be an object named "JS_Hook" and 
+      it needs to have a script attatched to it with a function called "UpdateText". The exact names can be changed, but
+      the object and function names need to match between Unity and the SendMessage call.
+    </p>
+    <p>Once Unity has the EMG data it is run through a machine learning model. [INSERT ML Overview]</p>
+    </div>
+    
+    <hr>
+
     <div id="unity-container" class="unity-desktop">
+      <div>
+        <h2 class="text">Live Demo</h2>
+        <button id="ganglion">Connect Sensor</button>
+        <p style="display: none;">Current value: <span id="filtered-sample">0</span></p>
+      </div>
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
@@ -23,9 +72,151 @@
         <div id="unity-build-title">CS495_PhysioGaming</div>
       </div>
     </div>
+
+    <hr>
+
+    <div id="setup" class="text">
+      <h2>Project Setup</h2>
+      <button type="button" class="collapsible">Unity</button>
+      <div class="content">
+        <p>Unity Instructions</p>
+      </div>
+
+      <button type="button" class="collapsible">Python</button>
+      <div class="content">
+        <p>Python Instructions</p>
+      </div>
+
+      <button type="button" class="collapsible">Javascript Pipeline</button>
+      <div class="content">
+        <p>JS Pipeline Instructions</p>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <div id="features" class="text">
+      <h2>Features</h2>
+      <button type="button" class="collapsible">Unity - Gameplay</button>
+      <div class="content">
+        <p>
+          FlyWorld has been expanded significantly from Dr. Crawford’s original product. 
+          We believe he may want the game to go in a different direction from what we have done with it,
+           but we will list the features we have implemented here in case they can be repurposed for a different game.
+        </p>
+        
+      </div>
+      <button type="button" class="collapsible">Movement</button>
+      <div class="content">
+        <p>
+          Right now, there are three methods of movement. The character can walk using WASD. This offers a fixed camera 
+          movement system where the camera rotates with the player. The player’s walk speed can be modified in the right-hand 
+          menu when the player is selected in the Unity environment.
+        </p>
+        <p>
+          The second way the character can move is vertically, using LShift or the EMG device. This will activate the jetpack, 
+          which accelerates the character upward. While moving up, WASD can still be used to move the character. Using the jetpack 
+          consumes fuel and overheats the jetpack. Both of these values can be observed in the top right corner of the UI. Once the 
+          overheat bar is full or the fuel bar is empty, the jetpack is rendered unusable until there is more than 0 fuel or less 
+          than full overheat.
+        </p>
+        <p>
+          The third method of movement is the LUNGE feature, which is an alternate way for the jetpack to move. When hitting LCtrl, the 
+          jetpack flames turn blue, and pressing LShift or using the EMG device makes the player fly forward extremely fast. This effect 
+          is temporary, lasting 3 seconds, and has a 7-second cooldown before it can be used again.
+        </p>
+      </div>
+
+      <button type="button" class="collapsible">Prefabs</button>
+      <div class="content">
+        <p>
+          We have added several prefabs that could be helpful in creating a level, regardless of whether the current form of the game is 
+          continued or changed to something else (to something like Temple Run). Currently, there are four relevant prefabs used in FlyWorld. 
+          To add a prefab to a scene, drag it from the assets menu at the bottom into the scene in the editor.
+        </p>
+        <p>
+          The BetterCoin, BetterFuel, and CooldownCrystals are all pickups that can be touched by the player to either add to their coin balance, 
+          refill their fuel, or cool down their jetpack. The items are destroyed on collision with the player, and the CoinBag and Jetpack objects 
+          associated with the Player object are updated to reflect the new value.
+        </p>
+        <p>
+          There is also a gas station prefab, Fuel Pump 3D, that was intended to be used as a checkpoint for the player. Currently, it will infinitely 
+          refill the player’s fuel while they are within a certain distance of the station.
+        </p>
+      </div>
+
+      <button type="button" class="collapsible">Levels</button>
+      <div class="content">
+        <p>
+          We currently have one level as a proof of concept for FlyWorld. It is called TestLevel in the Scenes folder. It is a simple platforming level 
+          that showcases the different prefabs and features we have added to the game. We recommend exploring this level to get an understanding of the 
+          mechanics currently in place in Unity.
+        </p>
+        <p>
+          Much of what is present in FlyWorld uses free assets from the Unity store. We are not professional model creators, nor even amateur model creators, 
+          so the only original content visually is the HUD.
+        </p>
+        
+      </div>
+
+      <button type="button" class="collapsible">Machine Learning</button>
+      <div class="content">
+        <p>
+          For this project, we used a 1D CNN to classify gestures. Our initial goal was to classify a fist squeeze vs. a hand at rest in order to control jetpack 
+          propulsion. We were able to achieve this goal with a relatively high level of accuracy. Other ideas we had that we weren’t able to complete were 
+          implementing a model that predicts rock vs. paper vs. scissors and implementing a model that controls a much more diverse set of movements. 
+        </p>
+        <p>
+          The machine learning pipeline has three primary files: Main_CollectData.py, Main_Train.py, and Main_Predict.py. The data collection file collects data 
+          for each of the gestures trained on. The training file then uses the data and the 1D CNN to train an ML model for gesture classification. The prediction 
+          file loads the trained ML model and does live predictions so that model accuracy can be observed on the backend.
+        </p>
+        
+      </div>
+
+    </div>
+
+    <hr>
+
+    <div id="goingfwd" class="text">
+      <h2>Going Forward</h2>
+      <p>Insert stuff Here</p>
+    </div>
+
+    <hr>
+
+    <div id="faqs" class="text">
+      <h2>FAQ's</h2>
+      <b>Q: None of the input buttons work in Unity after I loaded the project package. How do I fix it?</b>
+      <p>
+        A: Dr. Crawford’s input controls work on Unity’s legacy control system. By default, the Unity Editor will use the new input system on a new project. 
+        Go to Edit -> Project Settings -> Player and change “Active Input Handling” to “Input Manager (Old)”.
+      </p>
+ 
+      <b>Q:  The player object doesn’t have gravity applied to it, and none of the collisions are working. How do I fix it?</b>
+      <p>
+        A:  Go to Edit -> Project Settings -> Physics and change GameObject SDK to “PhysX”. Then go to Physics -> Settings -> 
+        GameObject and change Simulation Mode to “Update”.
+      </p>
+  
+      <b>Q: </b>
+      <p>A: </p>
+    </div>
+
+    <hr>
+
+    <div id="contributors" class="text">
+      <h2>Contributors</h2>
+      <p>Noah Morgans</p>
+      <p>Cade Dees</p>
+      <p>John Byrd</p>
+      <p>Josh Hipps</p>
+      <p>Sam Daly</p>
+    </div>
+
     <script>
       var canvas = document.querySelector("#unity-canvas");
-
       //*****
       var myGameInstance = null;
       //
@@ -137,14 +328,7 @@
 
     </script>
     <!-- **** -->
-    <button style="border:solid 1px black; width:200px; height:30px; margin:auto; text-align:center" onclick ="window.alert('TEST')">NativeJavascriptTest</button>
-    <button style="border:solid 1px black; width:200px; height:30px; margin:auto; text-align:center" onclick="myGameInstance.SendMessage('JavascriptHook', 'UpdateTest', document.getElementById('filtered-sample').innerHTML)">Text Updater</button>
       <body style="padding: 10px">
-        <button id="ganglion">Connect</button>
-        <div>
-          <canvas id="my_canvas"></canvas>
-        </div>
-          <p>Current value: <span id="filtered-sample">0</span></p>
         </div>
         <script>
           setInterval(function() {
@@ -153,9 +337,32 @@
         </script>
         <!-- -->
 
+
+
+        <div id="page-footer">
+          <p>December 2025</p>
+        </div>
   </body>
   <!-- **** -->
   <script type="module" src="datastream.js"></script>
   <script type="module" src="visualizer.js"></script>
   <!-- -->
+
+  <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+          content.style.display = "none";
+        } else {
+          content.style.display = "block";
+        }
+      });
+    }
+  </script>
+
 </html>

@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>CS495_PhysioGaming</title>
+    <title>Unity Web Player | CS495_PhysioGaming</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <!-- <link rel="stylesheet" href="style.css"> -->
   </head>
   <body>
     <div id="heading">
@@ -51,13 +50,13 @@
     </div>
     
     <hr>
-
-    <div id="unity-container" class="unity-desktop">
-      <div>
+    <div id="demo">
         <h2 class="text">Live Demo</h2>
         <button id="ganglion">Connect Sensor</button>
         <p style="display: none;">Current value: <span id="filtered-sample">0</span></p>
       </div>
+
+    <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
@@ -215,8 +214,11 @@
       <p>Sam Daly</p>
     </div>
 
+
+
     <script>
       var canvas = document.querySelector("#unity-canvas");
+
       //*****
       var myGameInstance = null;
       //
@@ -328,8 +330,12 @@
 
     </script>
     <!-- **** -->
+   
       <body style="padding: 10px">
-        </div>
+    
+        <div>
+          <canvas id="my_canvas" style="display: none;"></canvas>
+  
         <script>
           setInterval(function() {
             myGameInstance.SendMessage('JS_Hook', 'UpdateText', document.getElementById('filtered-sample').innerHTML);
@@ -337,14 +343,10 @@
         </script>
         <!-- -->
 
-
-
-        <div id="page-footer">
-          <p>December 2025</p>
-        </div>
   </body>
   <!-- **** -->
   <script type="module" src="datastream.js"></script>
+  <script type="module" src="visualizer.js"></script>
   <!-- -->
 
   <script>
@@ -363,5 +365,4 @@
       });
     }
   </script>
-
 </html>
