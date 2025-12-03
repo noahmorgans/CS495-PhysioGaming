@@ -4,7 +4,7 @@ from brainflow.data_filter import DataFilter, FilterTypes
 import numpy as np
 import time
 import pandas as pd
-from scipy.signal import iirnotch, filtfilt, butter
+from scipy.signal import iirnotch, filtfilt, butter, lfilter
 import os
 
 # Define directory structure
@@ -13,13 +13,14 @@ SIGNAL_DIR = os.path.join(BASE_DIR, "Signal Files")
 # Create directories if they don't exist
 os.makedirs(SIGNAL_DIR, exist_ok=True)
 # Update save path
-SAVE_FILE = os.path.join(SIGNAL_DIR, "emg_signals_3(all_group_members).csv")
+SAVE_FILE = os.path.join(SIGNAL_DIR, "emg_signals_4(new_electrode_placement).csv")
+sampling_rate = 200
 
 
 # How long to record per gesture (in seconds)
 RECORD_DURATION = 5
-NUM_TRIALS = 15  # Number of trials per gesture
-NUM_PEOPLE = 5  # Number of different people to record data from
+NUM_TRIALS = 10  # Number of trials per gesture
+NUM_PEOPLE = 1  # Number of different people to record data from
 ACTIVE_CHANNELS = [0]  # EMG channels to record
 
 # Gestures and their numeric labels
@@ -83,7 +84,7 @@ def collect_data_for_gesture(board, gesture_name, trial_num, duration=5):
     # Apply filters only to active channels
     for ch in active_channel_indices:
         try:
-            data[ch] = apply_bandpass_filter(data[ch], sampling_rate, lowcut=20.0)
+            data[ch] = apply_highpass_filter(data[ch], sampling_rate, lowcut=20.0)
             data[ch] = apply_notch_filter(data[ch], sampling_rate)
         except Exception as e:
             print(f"  Warning: Filter failed for channel {ch}: {e}")

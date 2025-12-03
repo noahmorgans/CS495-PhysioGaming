@@ -36,7 +36,10 @@ propulsion_template = propulsion_template[:window_size]                         
 rest_template = rest_template[:window_size]                                             #plt
 
 # Map numeric predictions to gesture names
-GESTURE_NAMES = {0: "Propulsion", 1: "Rest"}
+GESTURES = {
+    0: "Propulsion", 
+    1: "Rest"
+    }
 
 def apply_notch_filter(data, fs, notch_freq=60.0, quality_factor=30.0):
     """
@@ -129,7 +132,7 @@ def predict_gesture(window):
     
     # Get gesture name
     gesture_label = label_encoder.inverse_transform([predicted_class])[0]
-    gesture_name = GESTURE_NAMES.get(int(gesture_label), f"Unknown ({gesture_label})")
+    gesture_name = GESTURES.get(int(gesture_label), f"Unknown ({gesture_label})")
     
     return gesture_name, confidence, predictions
 
@@ -212,9 +215,8 @@ def main():
     # === Set up matplotlib live plot ===
     fig, ax, input_line, template_line = setup_plot()
 
-    BUFFER_SECONDS = 1
     # Buffer to store incoming data
-    data_buffer = deque(maxlen=int(BUFFER_SECONDS * sampling_rate))
+    data_buffer = deque(maxlen=window_size)
     
     # Counter for periodic detailed analysis
     analysis_counter = 0

@@ -39,7 +39,7 @@ class Graph:
         p.setMenuEnabled('left', False)
         p.showAxis('bottom', True)
         p.setMenuEnabled('bottom', False)
-        p.setYRange(-1000, 1000)
+        p.setYRange(-10, 10)
         p.setTitle('TimeSeries Plot')
         self.plots.append(p)
         curve = p.plot()

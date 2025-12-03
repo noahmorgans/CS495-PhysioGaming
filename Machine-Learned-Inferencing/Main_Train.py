@@ -3,8 +3,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
+import keras
+from keras import layers
 import joblib
 import os
 
@@ -24,8 +24,8 @@ os.makedirs(NORM_DIR, exist_ok=True)
 os.makedirs(TEMPLATE_DIR, exist_ok=True)
 
 # Load data from signal directory
-df = pd.read_csv(os.path.join(SIGNAL_DIR, "emg_signals_3(all_group_members).csv"))
-window_size = 100  # ~400 ms at 200 Hz sampling rate
+df = pd.read_csv(os.path.join(SIGNAL_DIR, "emg_signals_4(new_electrode_placement).csv"))
+window_size = 100  # ~500 ms at 200 Hz sampling rate
 overlap = int(window_size * 0.25)  # 25% overlap
 
 # Extract raw windows (no feature extraction needed for CNN)
@@ -164,20 +164,17 @@ print(f"\nTest accuracy: {test_accuracy:.4f}")
 print(f"Test loss: {test_loss:.4f}")
 
 # Save model and preprocessing parameters
-model.save(os.path.join(MODEL_DIR, "emg_cnn_model_3(TEMPLATES_TEST).keras"))
-joblib.dump(label_encoder, os.path.join(ENCODER_DIR, "emg_label_encoder_3(TEMPLATES_TEST).pkl"))
+model.save(os.path.join(MODEL_DIR, "emg_cnn_model_4(new_electrode_placement).keras"))
+joblib.dump(label_encoder, os.path.join(ENCODER_DIR, "emg_label_encoder_4(new_electrode_placement).pkl"))
 joblib.dump({
     'mean': X_mean, 
     'std': X_std,
     'window_size': window_size,
     'overlap': overlap
-}, os.path.join(NORM_DIR, "emg_normalization_3(TEMPLATES_TEST).pkl"))
+}, os.path.join(NORM_DIR, "emg_normalization_4(new_electrode_placement).pkl"))
+
 np.save(os.path.join(TEMPLATE_DIR, "propulsion_template(TEMPLATES_TEST).npy"), propulsion_template)
 np.save(os.path.join(TEMPLATE_DIR, "rest_template(TEMPLATES_TEST).npy"), rest_template)
 
 print("\n Model training complete!")
-print(f"Saved files:")
-print(f"  - emg_cnn_model.keras")
-print(f"  - emg_label_encoder.pkl")
-print(f"  - emg_normalization.pkl")
 print(f"\nLabel mapping: {dict(zip(label_encoder.classes_, label_encoder.transform(label_encoder.classes_)))}")
